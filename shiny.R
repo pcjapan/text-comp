@@ -14,19 +14,31 @@ ui <- fluidPage(
       fileInput("file2", "Choose Word List File",
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
-                           ".csv"))
+                           ".csv")),
+      actionButton("process_btn", "Process Text"),
+
+      conditionalPanel(
+        condition = "input.process_btn != 0",
+       hr(),
+
+      h3("Off-list Words"),
+      dataTableOutput("word_counts")
+      ),
+
     ),
     mainPanel(
-      htmlOutput("text1"),
-      br(),
-      htmlOutput("unmatched_output")
+      conditionalPanel(
+        condition = "input.process_btn != 0",
+      h2("Annotated Text"),
+      htmlOutput("text1")
+      ),
     )
   )
 )
 
 # Define server logic
 server <- function(input, output) {
-  observe({
+  observeEvent(input$process_btn, {
     req(input$file1)
     req(input$file2)
 
@@ -35,17 +47,19 @@ server <- function(input, output) {
     wordlist <- tolower(readLines(input$file2$datapath))
 
     # Split the text into words, handling punctuation
-    input_words <- gsub("\\n", " ", text)
-    input_words <- unlist(str_extract_all(input_words, "\\w+"))
+    text <- gsub("[^[:alnum:][:space:]'.,-]", "", text)
+    text <- gsub("\\n", "", text)
+    input_words <- unlist(str_extract_all(text, "\\w+"))
     text_words <- tolower(input_words)
-
-
 
     # Find unmatched words
     unmatched_words <- setdiff(text_words, wordlist)
 
+    word_counts <- data.frame(unmatched_words)
+    colnames(word_counts) <- c("Word")
+
     # Highlight unmatched words in the text
-    highlighted_text <- text_words
+    highlighted_text <- text
     for (word in unmatched_words) {
       highlighted_text <- str_replace_all(highlighted_text, paste0("\\b", word, "\\b"), paste0("<span style='color:red'>", word, "</span>"))
     }
@@ -54,8 +68,8 @@ server <- function(input, output) {
     output$text1 <- renderText({HTML(highlighted_text)})
 
     # Output the unmatched words
-    output$unmatched_output <- renderPrint({
-      paste(unique(unmatched_words))
+    output$word_counts <- renderDataTable({
+      word_counts
     })
 
   })
