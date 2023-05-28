@@ -35,7 +35,8 @@ server <- function(input, output) {
     wordlist <- tolower(readLines(input$file2$datapath))
 
     # Split the text into words, handling punctuation
-    input_words <- unlist(str_extract_all(text, "\\w+")[[1]])
+    input_words <- gsub("\\n", " ", text)
+    input_words <- unlist(str_extract_all(input_words, "\\w+"))
     text_words <- tolower(input_words)
 
 
@@ -44,7 +45,7 @@ server <- function(input, output) {
     unmatched_words <- setdiff(text_words, wordlist)
 
     # Highlight unmatched words in the text
-    highlighted_text <- text
+    highlighted_text <- text_words
     for (word in unmatched_words) {
       highlighted_text <- str_replace_all(highlighted_text, paste0("\\b", word, "\\b"), paste0("<span style='color:red'>", word, "</span>"))
     }
