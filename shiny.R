@@ -29,8 +29,8 @@ ui <- fluidPage(
     mainPanel(
       conditionalPanel(
         condition = "input.process_btn != 0",
-      h2("Total Words"),
-      textOutput("word_count"),
+      h2("Word Count"),
+      p("Total Words:", textOutput("word_count", inline=T)),
       h2("Annotated Text"),
       htmlOutput("text1")
       ),
