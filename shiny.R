@@ -34,6 +34,7 @@ ui <- fluidPage(
       p("Total Words:", textOutput("word_count", inline = T)),
       p("Unmatched Words:", textOutput("unmatched_word_count", inline = T)),
       p("Word Coverage (percent):", textOutput("percent_coverage", inline = T)),
+      p("Unique Word Count:", textOutput("unique_word_count", inline = T)),
       h2("Annotated Text"),
       htmlOutput("text1")
       ),
@@ -60,10 +61,15 @@ server <- function(input, output) {
     matched_words <- input_words[input_words %in% wordlist]
 
     # Get a count of the word numbers
-
+    # Totals
     num_total_words <- length(text_words)
     num_unmatched_words <- length(unmatched_words)
     num_matched_words  <- length(matched_words)
+
+    # Unique
+    unique_in_text <- length(unique(text_words))
+
+
     percent_matched <- num_matched_words / num_total_words * 100
 
 
@@ -86,6 +92,7 @@ server <- function(input, output) {
     # Print the number of words
     output$word_count <- renderText({num_total_words})
     output$unmatched_word_count <- renderText({num_unmatched_words})
+    output$unique_word_count <- renderText({unique_in_text})
     output$percent_coverage <- renderText({percent_matched})
 
     # Display the text with highlighted unmatched words
