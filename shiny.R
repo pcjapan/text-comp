@@ -29,6 +29,8 @@ ui <- fluidPage(
     mainPanel(
       conditionalPanel(
         condition = "input.process_btn != 0",
+      h2("Total Words"),
+      textOutput("word_count"),
       h2("Annotated Text"),
       htmlOutput("text1")
       ),
@@ -48,15 +50,21 @@ server <- function(input, output) {
 
     # Split the text into words, handling punctuation
     text <- gsub("[^[:alnum:][:space:]'.,-]", "", text)
-    text <- gsub("\\n", "", text)
     input_words <- unlist(str_extract_all(text, "\\w+"))
     text_words <- tolower(input_words)
+
+    # Get a count of the word numbers
+    num_total_words <- length(input_words)
 
     # Find unmatched words
     unmatched_words <- setdiff(text_words, wordlist)
 
-    word_counts <- data.frame(unmatched_words)
-    colnames(word_counts) <- c("Word")
+    # Find the unmatched words
+    unmatched_table_list <- sort(text_words[!text_words %in% wordlist])
+
+    # Create a table of the frequency count of each unmatched word
+    word_counts <- data.frame(table(unmatched_table_list))
+    colnames(word_counts) <- c("Word", "Count")
 
     # Highlight unmatched words in the text
     highlighted_text <- text
@@ -64,10 +72,15 @@ server <- function(input, output) {
       highlighted_text <- str_replace_all(highlighted_text, paste0("\\b", word, "\\b"), paste0("<span style='color:red'>", word, "</span>"))
     }
 
+    ## Output
+
+    # Print the number of words
+    output$word_count <- renderText({num_total_words})
+
     # Display the text with highlighted unmatched words
     output$text1 <- renderText({HTML(highlighted_text)})
 
-    # Output the unmatched words
+    # Output the unmatched words in datatable
     output$word_counts <- renderDataTable({
       word_counts
     })

@@ -3,14 +3,14 @@ library(readtext)
 library(quanteda.textstats)
 
 # Read the input text file
-input_file <- "/Users/office/Documents/R Worksets/text-comp/txt/decided/globalisation-2.txt"
+input_file <- "~/Documents/R Worksets/text comparison/txt/2.txt"
 input_text <- readtext(input_file, encoding = "UTF-8")
 
 # Calculate readability statistics for the input text
 text_stats <- textstat_readability(input_text$text, measure = c("Flesch","Flesch.Kincaid","meanSentenceLength","meanWordSyllables"))
 
 # Read the word list file
-word_list_file <- "/Users/office/Documents/R Worksets/text-comp/txt/NGSL.txt"
+word_list_file <- "~/Documents/R Worksets/text comparison/txt/NGSL.txt"
 word_list <- readtext(word_list_file, encoding = "UTF-8")
 
 # Split the input text into words
