@@ -1,6 +1,7 @@
 # Load necessary libraries
 library(shiny)
 library(stringr)
+library(readtext)
 
 # Define UI for application
 ui <- fluidPage(
@@ -30,7 +31,9 @@ ui <- fluidPage(
       conditionalPanel(
         condition = "input.process_btn != 0",
       h2("Word Count"),
-      p("Total Words:", textOutput("word_count", inline=T)),
+      p("Total Words:", textOutput("word_count", inline = T)),
+      p("Unmatched Words:", textOutput("unmatched_word_count", inline = T)),
+      p("Word Coverage (percent):", textOutput("percent_coverage", inline = T)),
       h2("Annotated Text"),
       htmlOutput("text1")
       ),
@@ -45,19 +48,24 @@ server <- function(input, output) {
     req(input$file2)
 
     # Read the files
-    text <- tolower(readLines(input$file1$datapath))
+    text <- tolower(readtext(input$file1$datapath))
     wordlist <- tolower(readLines(input$file2$datapath))
 
-    # Split the text into words, handling punctuation
-    text <- gsub("[^[:alnum:][:space:]'.,-]", "", text)
+    # Split the text into words
     input_words <- unlist(str_extract_all(text, "\\w+"))
     text_words <- tolower(input_words)
 
-    # Get a count of the word numbers
-    num_total_words <- length(input_words)
-
     # Find unmatched words
     unmatched_words <- setdiff(text_words, wordlist)
+    matched_words <- input_words[input_words %in% wordlist]
+
+    # Get a count of the word numbers
+
+    num_total_words <- length(text_words)
+    num_unmatched_words <- length(unmatched_words)
+    num_matched_words  <- length(matched_words)
+    percent_matched <- num_matched_words / num_total_words * 100
+
 
     # Find the unmatched words
     unmatched_table_list <- sort(text_words[!text_words %in% wordlist])
@@ -68,6 +76,7 @@ server <- function(input, output) {
 
     # Highlight unmatched words in the text
     highlighted_text <- text
+    highlighted_text <- gsub("[\r\n]", "<br />", highlighted_text)
     for (word in unmatched_words) {
       highlighted_text <- str_replace_all(highlighted_text, paste0("\\b", word, "\\b"), paste0("<span style='color:red'>", word, "</span>"))
     }
@@ -76,6 +85,8 @@ server <- function(input, output) {
 
     # Print the number of words
     output$word_count <- renderText({num_total_words})
+    output$unmatched_word_count <- renderText({num_unmatched_words})
+    output$percent_coverage <- renderText({percent_matched})
 
     # Display the text with highlighted unmatched words
     output$text1 <- renderText({HTML(highlighted_text)})
