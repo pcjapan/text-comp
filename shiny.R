@@ -53,8 +53,10 @@ server <- function(input, output) {
     wordlist <- tolower(readLines(input$file2$datapath))
 
     # Split the text into words
-    input_words <- unlist(str_extract_all(text, "\\w+"))
+    input_words <- unlist(str_replace_all(text, "\\'", ""))
+    input_words <- unlist(str_extract_all(input_words, "\\w+"))
     text_words <- tolower(input_words)
+
 
     # Find unmatched words
     unmatched_words <- setdiff(text_words, wordlist)
