@@ -2,9 +2,13 @@
 library(shiny)
 library(stringr)
 library(readtext)
+library(DT)
 
 # Define UI for application
 ui <- fluidPage(
+  theme = bs_theme(
+    version = 5,
+    bootswatch = "sandstone"),
   titlePanel("Text File Comparison"),
   sidebarLayout(
     sidebarPanel(
@@ -19,11 +23,7 @@ ui <- fluidPage(
       actionButton("process_btn", "Process Text"),
 
       conditionalPanel(
-        condition = "input.process_btn != 0",
-       hr(),
-
-      h3("Off-list Words"),
-      dataTableOutput("word_counts")
+        condition = "input.process_btn != 0"
       ),
 
     ),
@@ -35,8 +35,20 @@ ui <- fluidPage(
       p("Unmatched Words:", textOutput("unmatched_word_count", inline = T)),
       p("Word Coverage (percent):", textOutput("percent_coverage", inline = T)),
       p("Unique Word Count:", textOutput("unique_word_count", inline = T)),
-      h2("Annotated Text"),
-      htmlOutput("text1")
+     card(
+       card_header(
+         h1("Annotated Text"),
+         ),
+       card_body(
+         htmlOutput("text1")
+         ),
+      ),
+      card(
+        card_header(
+          h1("Off-list Words"),
+          ),
+       card_body(
+         dataTableOutput("word_counts"))),
       ),
     )
   )
