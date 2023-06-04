@@ -30,6 +30,7 @@ ui <- fluidPage(
           h1("Instructions")
         ),
         card_body(
+          p("This application was created for a particular need case: To check texts against a user-defined word list so as to receive an indication of the coverage the word list provides. Basic readility statistics are also calculated and reported. To use the application, please follow these steps:"),
          tags$ul(
            tags$li("Prepare and save your", tags$b(" text "), "as a plain text file with the ",  tags$i(".txt "),  "prefix"),
            tags$li("Prepare and save your", tags$b(" wordlist "), "as a plain text file, with each word separated by a comma or by a line break. Save this file as a ",  tags$i(".txt " ), "or ",  tags$i(".csv "),  "file"),
