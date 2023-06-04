@@ -3,6 +3,7 @@ library(shiny)
 library(stringr)
 library(readtext)
 library(DT)
+library(bslib)
 
 # Define UI for application
 ui <- fluidPage(
@@ -15,41 +16,58 @@ ui <- fluidPage(
       fileInput("file1", "Choose Text File",
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
-                           ".csv")),
+                           ".txt")
+                ),
       fileInput("file2", "Choose Word List File",
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
-                           ".csv")),
+                           ".txt")
+                ),
       actionButton("process_btn", "Process Text"),
-
-      conditionalPanel(
-        condition = "input.process_btn != 0"
-      ),
-
+      hr(),
+      card(
+        card_header(
+          h1("Instructions")
+        ),
+        card_body(
+         tags$ul(
+           tags$li("Prepare and save your", tags$b(" text "), "as a plain text file with the ",  tags$i(".txt "),  "prefix"),
+           tags$li("Prepare and save your", tags$b(" wordlist "), "as a plain text file, with each word separated by a comma or by a line break. Save this file as a ",  tags$i(".txt " ), "or ",  tags$i(".csv "),  "file"),
+           tags$li("Make sure there is a", tags$u("line break / carriage return at the end"), "of each document."),
+           tags$li("Use the ", tags$i("Browse..."),  "buttons to find and upload the saved texts on your computer. Click ", tags$i("Process Text"), "when done." )
+           )
+        )
+      )
     ),
     mainPanel(
       conditionalPanel(
         condition = "input.process_btn != 0",
-      h2("Word Count"),
-      p("Total Words:", textOutput("word_count", inline = T)),
-      p("Unmatched Words:", textOutput("unmatched_word_count", inline = T)),
-      p("Word Coverage (percent):", textOutput("percent_coverage", inline = T)),
-      p("Unique Word Count:", textOutput("unique_word_count", inline = T)),
+      card(
+        card_header(
+          h1("Word Count")
+          ),
+        card_body(
+          p("Total Words:", textOutput("word_count", inline = T)),
+          p("Unmatched Words:", textOutput("unmatched_word_count", inline = T)),
+          p("Word Coverage (percent):", textOutput("percent_coverage", inline = T)),
+          p("Unique Word Count:", textOutput("unique_word_count", inline = T))
+          )
+        ),
      card(
        card_header(
-         h1("Annotated Text"),
+         h1("Annotated Text")
          ),
        card_body(
          htmlOutput("text1")
-         ),
+         )
       ),
       card(
         card_header(
-          h1("Off-list Words"),
+          h1("Off-list Words")
           ),
        card_body(
-         dataTableOutput("word_counts"))),
-      ),
+         dataTableOutput("word_counts")))
+      )
     )
   )
 )
