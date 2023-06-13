@@ -41,6 +41,7 @@ ui <- page_sidebar(
   title = "Text File Comparison",
   sidebar = sidebar(
     width = "25%",
+    h1("Input"),
       fileInput("file1", "Choose Text File",
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
