@@ -140,8 +140,6 @@ server <- function(input, output) {
 
     # Readability measures
     readDf <- textstat_readability(txtRS, measure = c("Flesch", "Flesch.Kincaid"))
-    colnames(readDf)[1] <- "Document"
-    names(readDf)[1] <- "Text File"
 
 
     ## Output
