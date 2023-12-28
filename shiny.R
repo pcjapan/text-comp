@@ -71,7 +71,7 @@ ui <- fluidPage(
             h1("Instructions"),
           tags$ul(
             tags$li("Prepare and save your", tags$b(" text "), "as a plain text file with the ",  tags$i(".txt "),  "prefix"),
-            tags$li("Prepare and save your", tags$b(" wordlist "), "as a plain text file, with each word separated by a comma or by a line break. Save this file as a ",  tags$i(".txt " ), "or ",  tags$i(".csv "),  "file"),
+            tags$li("Prepare and save your", tags$b(" word list "), "as a plain text file, with each word separated by a comma or by a line break. Save this file as a ",  tags$i(".txt " ), "or ",  tags$i(".csv "),  "file"),
             tags$li("Make sure there is a", tags$span(style = "color: red", "line break / carriage return at the end"), "of each document - i.e., the last line in the document should be empty."),
             tags$li("Use the ", tags$i("Browse..."),  "buttons to locate the text and wordlist, and upload them to the application. Click ", tags$i("Process Text"), "once the files have ben uploaded." ),
             tags$li("Results will be displayed onscreen." )
