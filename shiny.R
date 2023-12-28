@@ -143,6 +143,7 @@ server <- function(input, output) {
     colnames(readDf)[1] <- "Document"
     names(readDf)[1] <- "Text File"
 
+
     ## Output
 
     # Print the number of words
